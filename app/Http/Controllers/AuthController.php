@@ -16,7 +16,7 @@ class AuthController extends Controller
 
     public function login(LoginUserRequest $req)
     {
-        $req->validated($req->all());
+        // $req->validated($req->all());
 
         if (!Auth::attempt($req->only('email', 'password'))) {
             return $this->error('', 'Invalid email or password', 401);
@@ -50,6 +50,10 @@ class AuthController extends Controller
 
     public function logout()
     {
-        return response()->json('This is my logout method');
+        Auth::user()->currentAccessToken()->delete();
+
+        return $this->success([
+            'message' => 'You have successfully been logged out and token has been removed'
+        ]);
     }
 }
